@@ -13,6 +13,8 @@ class Solution:
         self.info = info
 
     def output_paths(self):
+        source = self.info['source']
+        clients = self.info['clients']
         """
         This method must be filled in by you. You may add other methods and subclasses as you see fit,
         but they must remain within the Solution class.
