@@ -13,8 +13,8 @@ class Solution:
         self.info = info
 
     def output_paths(self):
-        source = self.info['source']
-        clients = self.info['clients']
+        source = self.isp
+        clients = self.info['list_clients']
         distance = {source: 0}
         parent = {source: None}
         pq = [(0, source)]
@@ -27,8 +27,8 @@ class Solution:
             if d > distance.get(u, float('inf')):
                 continue
 
-            for v in self.graph.neighbors(u):
-                weight = self.graph[u][v].get('delay', 1)
+            for v in self.graph[u]:
+                weight = 1
                 newD = d + weight
                 
                 if newD < distance.get(v, float('inf')):
@@ -44,5 +44,6 @@ class Solution:
                 curr = parent.get(curr)
             paths[c] = list(path)
 
-        bandwidths, priorities = {}, {}
+        bandwidths = self.info['bandwidths']
+        priorities = {}
         return (paths, bandwidths, priorities)
