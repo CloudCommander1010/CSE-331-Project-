@@ -15,11 +15,34 @@ class Solution:
     def output_paths(self):
         source = self.info['source']
         clients = self.info['clients']
-        """
-        This method must be filled in by you. You may add other methods and subclasses as you see fit,
-        but they must remain within the Solution class.
-        """
-        paths, bandwidths, priorities = {}, {}, {}
-        # Note: You do not need to modify all of the above. For Problem 1, only the paths variable needs to be modified. If you do modify a variable you are not supposed to, you might notice different revenues outputted by the Driver locally since the autograder will ignore the variables not relevant for the problem.
-        # WARNING: DO NOT MODIFY THE LINE BELOW, OR BAD THINGS WILL HAPPEN
+        distance = {source: 0}
+        parent = {source: None}
+        pq = [(0, source)]
+
+        while len(pq) > 0:
+            n = heapq.heappop(pq)
+            d = n[0]
+            u = n[1]
+
+            if d > distance.get(u, float('inf')):
+                continue
+
+            for v in self.graph.neighbors(u):
+                weight = self.graph[u][v].get('delay', 1)
+                newD = d + weight
+                
+                if newD < distance.get(v, float('inf')):
+                    distance[v] = newD
+                    parent[v] = u
+                    heapq.heappush(pq, (newD, v))
+        paths = {}
+        for c in clients:
+            path = deque()
+            curr = c
+            while curr is not None:
+                path.appendleft(curr)
+                curr = parent.get(curr)
+            paths[c] = list(path)
+
+        bandwidths, priorities = {}, {}
         return (paths, bandwidths, priorities)
